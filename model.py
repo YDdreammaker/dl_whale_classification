@@ -95,7 +95,7 @@ class SpecieClassifier(nn.Module):
 
 
 class IndividualClassifier(nn.Module):
-    def __init__(self, model_name, emb_size=512, n_classes=15587, s=30.0, m=0.30, easy_margin=False, ls_eps=0.0, p=0.):
+    def __init__(self, model_name, emb_size=2048, n_classes=15587, s=30.0, m=0.30, easy_margin=False, ls_eps=0.0, p=0.):
         super().__init__()
         self.model = timm.create_model(model_name, pretrained=True)
         in_features = self.model.classifier.in_features
@@ -103,7 +103,6 @@ class IndividualClassifier(nn.Module):
         self.arc = ArcMarginProduct(emb_size, n_classes, s=s, m=m, easy_margin=easy_margin, ls_eps=ls_eps)
         
     def forward(self, image, label):
-        emb1 = self.model(image) # later 1 return test
-        emb2 = self.attn(emb1)
-        output = self.arc(emb2, label)
-        return output, emb2
+        emb = self.model(image) # later 1 return test
+        output = self.arc(emb, label)
+        return output, emb
