@@ -5,7 +5,7 @@ import pandas as pd
 from tqdm import tqdm
 from torch.utils.data import Dataset
 from torch.utils.data import DataLoader
-from sklearn.model_selection import StratifiedKFold
+from sklearn.model_selection import StratifiedKFold, KFold
 
 import albumentations as A
 from albumentations.pytorch.transforms import ToTensorV2
@@ -36,17 +36,17 @@ def get_train_transforms():
         A.HorizontalFlip(p=0.5),
         A.ShiftScaleRotate(shift_limit=0.1, 
                            scale_limit=0.15, 
-                           rotate_limit=30, 
+                           rotate_limit=45, 
                            p=0.5),
         A.HueSaturationValue(
                 hue_shift_limit=0.2, 
-                sat_shift_limit=0.2, 
-                val_shift_limit=0.2, 
+                # sat_shift_limit=0.2, 
+                # val_shift_limit=0.2, 
                 p=0.5),
-        A.RandomBrightnessContrast(
-                brightness_limit=(-0.1, 0.1), 
-                contrast_limit=(-0.1, 0.1), 
-                p=0.5),
+        # A.RandomBrightnessContrast(
+        #         brightness_limit=(-0.1, 0.1), 
+        #         contrast_limit=(-0.1, 0.1), 
+        #         p=0.5),
         # input img (0, 255)
         # img = (img - mean * max_pixel_value) / (std * max_pixel_value)
         # for just min max normalize mean = 0, std = 1
@@ -65,7 +65,12 @@ def get_valid_transforms():
         ToTensorV2()
     ])
 
-def stratified_kfold(df, fold, n_split, seed=2022, input_col='image', target_col='species'):
+def stratified_kfold(df, fold, n_split, seed=2022, input_col='image', target_col='species', just_kfold=True):
+    skf = KFold(n_splits=n_split, shuffle=True, random_state=seed)
+    if just_kfold:
+        for idx, (train_index, valid_index) in enumerate(skf.split(df[input_col])):
+            if idx == fold:
+                return train_index, valid_index
     skf = StratifiedKFold(n_splits=n_split, shuffle=True, random_state=seed)
     for idx, (train_index, valid_index) in enumerate(skf.split(df[input_col], df[target_col])):
         if idx == fold:
