@@ -1,4 +1,4 @@
-# 🥈수식 인식: To be Modeler and Beyond!
+# 🥈HappyWhale - Dolphin and Whale
 
 <div style="text-align:center"><img src=./img/main.png?raw=true /></div>
 <br>
