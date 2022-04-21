@@ -51,11 +51,13 @@
 
 # Project Result
 
-* 은메달 47 등 / 1,613 팀
+<div><img src=./img/rank.png?raw=true /></div>
 
-* Public LB Score: 0.85147 / Private LB Score: 0.81686
+- 은메달 47 등 / 1,613 팀
 
-* 솔루션은 [이곳](https://www.notion.so/Solution-3ccc8fd2a39841a78d5726946b109707)에서 확인하실 수 있습니다.
+- Public LB Score: 0.85147 / Private LB Score: 0.81686
+
+- 솔루션은 [이곳](https://www.notion.so/Solution-3ccc8fd2a39841a78d5726946b109707)에서 확인하실 수 있습니다.
 <br>
 
 <!-- # Installation
