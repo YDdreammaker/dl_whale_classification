@@ -213,6 +213,11 @@ $ python inference.py --inference_type ensemble --checkpoint <MODEL1PATH.pth> <M
             <br />
             <a href="https://www.notion.so/b47246b96c204ca38f96c45888919525?v=f2ab615cde7342c78d3761641a828e5c">Notion</a>
         </td>
+        <td align="center" width="350px">	
+            <a><img height="180px" width="320px" src="./img/wandb.png?raw=true"/></a>
+            <br />
+            <a>WanDB</a>
+        </td>
     </tr>
 </table>
 
