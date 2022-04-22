@@ -38,16 +38,10 @@
 ### Metric
 
 <img src="./img/metric.png" />
-<br>
+</br></br>
 
-| true  | predicted   | score |
-|:-:|:-:|:-:|
-| [x]  | [x, ?, ?, ?, ?]   | $$1\over1$$  |
-| [x]  | [?, x, ?, ?, ?]   | $$1\over2$$  |
-| [x]  | [?, ?, x, ?, ?]   | $$1\over3$$  |
-| [x]  | [?, ?, ?, x, ?]   | $$1\over4$$  |
-| [x]  | [?, ?, ?, ?, x]   | $$1\over5$$  |
-<br>
+<img src="./img/metric_score.png" width='300px' height='180px' />
+</br></br>
 
 # Project Result
 
@@ -58,7 +52,7 @@
 - Public LB Score: 0.85147 / Private LB Score: 0.81686
 
 - 솔루션은 [이곳](https://www.notion.so/Solution-3ccc8fd2a39841a78d5726946b109707)에서 확인하실 수 있습니다.
-<br>
+</br>
 
 <!-- # Installation
 
@@ -202,8 +196,7 @@ $ python inference.py --inference_type ensemble --checkpoint <MODEL1PATH.pth> <M
 ##### `file_path (str)`: 추론할 데이터 경로
 
 ##### `output_dir (str)`: 추론 결과를 저장할 디렉토리 경로 (default: `'./result/'`) -->
-
-<br>
+</br>
 
 # Collaboration Tools
 <table>
@@ -220,6 +213,7 @@ $ python inference.py --inference_type ensemble --checkpoint <MODEL1PATH.pth> <M
         </td>
     </tr>
 </table>
+</br>
 
 # Who Are We?
 
