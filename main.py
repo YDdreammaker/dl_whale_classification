@@ -119,6 +119,7 @@ if __name__ == '__main__':
     parser.add_argment('--emb_size', type=int, default=2048)
     parser.add_argment('--margin', type=float, default=0.55)
     parser.add_argment('--s', type=float, default=30.0)
+    parser.add_argment('--m', type=float, default=0.5)
     parser.add_argment('--weight_decay', type=tuple, default=0.)
     parser.add_argment('--experiment', type=str, default='test')
     

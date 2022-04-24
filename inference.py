@@ -142,12 +142,12 @@ if __name__ == '__main__':
     
     parser = argparse.ArgumentParser(description='Embedding or Logit inference')
     
-    parser.add_argment('--inference_type', '-t', type=str, default='embedding'
+    parser.add_argment('--inference_type', '-t', type=str, default='embedding',
                       help='Choose embedding inference or logit inference')
     
     args = parser.parse_args()
     
-    if args.inference_type == 'enbedding':
+    if args.inference_type == 'embedding':
 
         main_embedding(
             batch_size=64,
@@ -156,8 +156,8 @@ if __name__ == '__main__':
             test_root='../data3/sample_submission.csv',
             test_image_root='../data3/test_detec_512_v5/',
             train_image_root='../data3/train_detec_512_v5/',
-            image_size= 384, 384
-            model_name='tf_efficientnet_b5_ns', 
+            image_size= 384,
+            model_name='tf_efficientnet_b5_ns',
             model_path='../saved/checkpoint/tf_efficientnetv2_m/000.pt',
             )
     else:

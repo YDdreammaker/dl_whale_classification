@@ -9,11 +9,11 @@
 
 #### &nbsp;&nbsp;&nbsp;&nbsp;**[🏆Project Result](https://github.com/YDdreammaker/dl_whale_classification#project-result-1)**
 
-<!-- #### &nbsp;&nbsp;&nbsp;&nbsp;**[⚙Installation](https://github.com/YDdreammaker/dl_whale_classification#installation-1)**
+#### &nbsp;&nbsp;&nbsp;&nbsp;**[⚙Installation](https://github.com/YDdreammaker/dl_whale_classification#installation-1)**
 
 #### &nbsp;&nbsp;&nbsp;&nbsp;**[🕹Command Line Interface](https://github.com/YDdreammaker/dl_whale_classification#command-line-interface-1)**
 
-#### &nbsp;&nbsp;&nbsp;&nbsp;**[🤝Collaboration Tools](https://github.com/YDdreammaker/dl_whale_classification#collaboration-tools-1)** -->
+#### &nbsp;&nbsp;&nbsp;&nbsp;**[🤝Collaboration Tools](https://github.com/YDdreammaker/dl_whale_classification#collaboration-tools-1)**
 
 #### &nbsp;&nbsp;&nbsp;&nbsp;**[👩‍👦‍👦Who Are We?](https://github.com/YDdreammaker/dl_whale_classification#who-are-we-1)**
 <br>
@@ -38,10 +38,10 @@
 ### Metric
 
 <img src="./img/metric.png" />
-</br></br>
+</br>
 
 <img src="./img/metric_score.png" width='300px' height='180px' />
-</br></br>
+</br>
 
 # Project Result
 
@@ -54,11 +54,11 @@
 - 솔루션은 [이곳](https://www.notion.so/Solution-3ccc8fd2a39841a78d5726946b109707)에서 확인하실 수 있습니다.
 </br>
 
-<!-- # Installation
+# Installation
 
-```shell
+```bash
 # clone repository
-git clone https://github.com/bcaitech1/p4-fr-sorry-math-but-love-you.git
+git clone https://github.com/YDdreammaker/dl_whale_classification.git
 
 # install necessary tools
 pip install -r requirements.txt
@@ -68,11 +68,15 @@ pip install -r requirements.txt
 
 ```shell
 [dataset]/
-├── gt.txt
-├── tokens.txt
-└── images/
+├── train.csv
+├── sample_submission.csv
+├── train/
     ├── *.jpg
-    ├── ...     
+    ├── ...
+    └── *.jpg
+└── test/
+    ├── *.jpg
+    ├── ...
     └── *.jpg
 ```
 
@@ -80,17 +84,15 @@ pip install -r requirements.txt
 
 ```shell
 [code]
-├── configs/ # configuration files
-├── data_tools/ # modules for dataset
-├── networks/ # modules for model architecture
-├── postprocessing/ # modules for postprocessing during inference
-├── schedulers/ # scheduler for learning rate, teacher forcing ratio
-├── utils/ # useful utilities
-├── inference_modules/ # modules for inference
-├── train_modules/ # modules for train
+├── data.py/ # modules for dataset
+├── loss.py/ # modules for loss during train
+├── schedulers.py/ # Cosine Annealing Warmup scheduler
+├── utils.py/ # useful utilities
+├── model.py/ # modules for model during train
+├── train.py/ # modules for train and validation of one epoch
 ├── README.md
 ├── requirements.txt
-├── train.py
+├── main.py
 └── inference.py
 ```
 
@@ -100,102 +102,37 @@ pip install -r requirements.txt
 
 ## Train
 
-#### Train with single optimizer
-
-```shell
-$ python train.py --train_type single_opt --config_file './configs/EfficientSATRN.yaml'
+```bash
+$ python main.py --n_split \
+                 --fold \
+                 --seed \
+                 --epoch \
+                 --model_name \
+                 --train_data \
+                 --train_image_root \
+                 --image_size \
+                 --batch_size \
+                 --iters_to_accumulate \
+                 --learning_rate \         # max learning rate for scheduler
+                 --emb_size \              # embedding size
+                 --margin \
+                 --s \                    # ArcFace parameter
+                 --m \                    # ArcFace parameter
+                 --weight_decay \
+                 --experiment \           # for keep training for ex-train
 ```
-
-#### Train with two optimizers for encoder and decoder
-
-```shell
-$ python train.py --train_type dual_opt --config_file './configs/EfficientSATRN.yaml'
-```
-
-#### Knowledge distillation training
-
-```shell
-$ python train.py --train_type distillation --config_file './configs/LiteSATRN.yaml' --teacher_ckpt 'TEACHER-MODEL_CKPT_PATH'
-```
-
-#### Train with Weight & Bias logging tool
-
-```shell
-$ python train.py --train_type single_opt --project_name <PROJECTNAME> --exp_name <EXPNAME> --config_file './configs/EfficientSATRN.yaml'
-```
-
-#### Arguments
-
-##### `train_type (str)`: 학습 방식
-
-* `'single_opt'`: 단일 optimizer를 활용한 학습을 진행합니다.
-* `'dual_opt'`: 인코더, 디코더에 optimizer가 개별 부여된 학습을 진행합니다.
-* `'distillation'`: Knowledge Distillation 학습을 진행합니다.
-
-##### `config_file (str)`: 학습 모델의 configuration 파일 경로
-
-- 모델 configuration은 아키텍처별로 상이하며, [이곳](https://github.com/bcaitech1/p4-fr-sorry-math-but-love-you/blob/master/configs/EfficientASTER.yaml)에서 해당 예시를 보실 수 있습니다.
-- 학습 가능한 모델은 ***[EfficientSATRN](https://github.com/bcaitech1/p4-fr-sorry-math-but-love-you/blob/7502ec98b49999eaf19eed3bc05a57e0d712dfde/networks/EfficientSATRN.py#L664)***, ***[EfficientASTER](https://github.com/bcaitech1/p4-fr-sorry-math-but-love-you/blob/7502ec98b49999eaf19eed3bc05a57e0d712dfde/networks/EfficientASTER.py#L333)***, ***[SwinTRN](https://github.com/bcaitech1/p4-fr-sorry-math-but-love-you/blob/7502ec98b49999eaf19eed3bc05a57e0d712dfde/networks/SWIN.py#L1023)***,    ***[LiteSATRN](https://github.com/iloveslowfood/p4-fr-sorry-math-but-love-you/blob/3ffa06229659505fc2b4ef2ec652168b4ff7857b/networks/LiteSATRN.py#L548)*** 입니다.
-
-##### `teacher_ckpt (str)`: Knowledge Distillation 학습 시 불러올 Teacher 모델 checkpoint 경로
-
-##### `project_name (str)`: (optional) 학습 중 [Weight & Bias](https://wandb.ai/site) 로깅 툴을 활용할 경우 사용할 프로젝트명
-
-##### `exp_name (str)`: (optional) 학습 중 [Weight & Bias](https://wandb.ai/site) 로깅 툴을 활용할 경우 사용할 실험명
-
----
 
 ## Inference
 
-#### Inference with single model
-
+#### make embedding pt file
 ```shell
-$ python inference.py --inference_type single --checkpoint <MODELPATH.pth>
+$ python inference.py --inference_type embedding
 ```
 
-#### Ensemble inference
-
+#### make logit pt file
 ```shell
-$ python inference.py --inference_type ensemble --checkpoint <MODEL1PATH.pth> <MODEL2PATH.pth> ...
+$ python inference.py --inference_type logit
 ```
-
-#### Arguments
-
-##### `inference_type (str)`: 추론 방식
-
-- `single`: 단일 모델을 불러와 추론을 진행합니다.
-- `ensemble`: 여러 모델을 불러와 앙상블 추론을 진행합니다.
-
-##### `checkpoint (str)`: 불러올 모델 경로
-
-- 앙상블 추론시 다음과 같이 모델의 경로를 나열합니다.
-
-  ```shell
-  --checkpoint <MODELPATH_1.pth> <MODELPATH_2.pth> <MODELPATH_3.pth> ...
-  ```
-
-##### `max_sequence (int)`: 수식 문장 생성 시 최대 생성 길이 (default. 230)
-
-##### `batch_size (int)` : 배치 사이즈 (default. 32)
-
-##### `decode_type (str)`: 디코딩 방식
-
-- ``'greedy'``: 그리디 디코딩 방법으로 디코딩을 진행합니다.
-- `'beam'`: 빔서치 방법으로 디코딩을 진행합니다.
-
-##### `decoding_manager (bool)`: DecodingManager 사용 여부
-
-##### `tokens_path (str)`: 토큰 파일 경로
-
-- ***NOTE.*** DecodingManager를 사용할 경우에만 활용됩니다.
-
-##### `max_cache (int)`: 앙상블(`'ensemble'`) 추론 시 인코더 추론 결과를 임시 저장할 배치 수
-
-- ***NOTE.*** 높은 값을 지정할 수록 추론 속도가 빨라지만, 일시적으로 많은 저장 공간을 차지합니다.
-
-##### `file_path (str)`: 추론할 데이터 경로
-
-##### `output_dir (str)`: 추론 결과를 저장할 디렉토리 경로 (default: `'./result/'`) -->
 </br>
 
 # Collaboration Tools
