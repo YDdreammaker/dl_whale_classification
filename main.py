@@ -5,16 +5,16 @@ import torch
 import numpy as np
 import pandas as pd
 import torch.nn as nn
-from config import CFG
 from copy import deepcopy
 from torch.utils.data import DataLoader
+import argparse
+
 from data import ImageDataset, stratified_kfold, get_train_transforms, get_valid_transforms
 from model import HappyWhaleModel
 from loss import ArcFaceLoss
 from train import train_epoch, validate
 from utils import seed_everything
 from scheduler import CosineAnnealingWarmupRestarts
-import argparse
 
 
 def main(config):
@@ -105,57 +105,26 @@ def main(config):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Train Config')
     
-    arser.add_argment('--n_split', type=int, default=5)
-    arser.add_argment('--fold', type=int, default=0)
-    arser.add_argment('--seed', type=int, default=2022)
-    arser.add_argment('--epoch', type=int, default=21)
-    arser.add_argment()
-    arser.add_argment()
-    arser.add_argment()
-    arser.add_argment()
+    parser.add_argment('--n_split', type=int, default=5)
+    parser.add_argment('--fold', type=int, default=0)
+    parser.add_argment('--seed', type=int, default=2022)
+    parser.add_argment('--epoch', type=int, default=21)
+    parser.add_argment('--model_name', type=str, default='tf_efficientnet_b5_ns')
+    parser.add_argment('--train_data', type=str, default='../data/train.csv')
+    parser.add_argment('--train_image_root', type=str, default='../data/train_detec_512_v5/')
+    parser.add_argment('--image_size', type=tuple, default=(16, 16))
+    parser.add_argment('--batch_size', type=int, default=512)
+    parser.add_argment('--iters_to_accumulate', type=int, default=1)
+    parser.add_argment('--learning_rate', type=float, default=6.25e-6)
+    parser.add_argment('--emb_size', type=int, default=2048)
+    parser.add_argment('--margin', type=float, default=0.55)
+    parser.add_argment('--s', type=float, default=30.0)
+    parser.add_argment('--weight_decay', type=tuple, default=0.)
+    parser.add_argment('--experiment', type=str, default='test')
     
-    class CFG:
-        n_split = 5
-        fold = 0
-        seed = 2022
-        epoch = 21
-        model_name = 'tf_efficientnet_b5_ns'
-        train_data = '../data/train.csv'
-        train_image_root = '../data/train_detec_512_v5/'
-        image_size = 16, 16
-        batch_size = 512
-        iters_to_accumulate = 1
-        learning_rate = 5e-6 * batch_size * iters_to_accumulate
-        emb_size = 2048
-        m = 0.55
-        weight_decay = 0.
-        s = 30.0
+    config = parser.parse_args()
     
-    
-    config = CFG()
-    config.test = False
-    config.full = False
-    config.wandb_log = True
-    config.gamma = 1
-    config.emb_size = 2048 # 512
-    config.epoch = 21
-    config.s = 30
-    config.m = 0.55
+    config.learning_rate = config.learning_rate * config.batch_size * config.iters_to_accumulate
 
-    config.train_data = '/USER/data3/train.csv'
-    config.train_image_root = '/USER/beluga/'
-    config.project = 'beluga'
-
-    config.batch_size = 32
-    config.iters_to_accumulate = 2
-    config.learning_rate = 6.25e-6 * config.batch_size * config.iters_to_accumulate
-    config.model_name = 'convnext_base' # 'tf_efficientnet_b5_ap', 'tf_efficientnetv2_m'
-    config.image_size = 224, 512 # 128*512, 512*2048
-    config.exp_name = '384_v2_convnext_gauss5'
-
-    config.fold = 0
-    
-    
-    
     main(config)
     
